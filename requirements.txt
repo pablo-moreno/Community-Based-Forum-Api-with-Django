@@ -1,0 +1,11 @@
+certifi==2018.8.24
+chardet==3.0.4
+Django==2.1
+django-debug-toolbar==1.9.1
+djangorestframework==3.8.2
+idna==2.7
+Pillow==5.2.0
+pytz==2018.5
+requests==2.19.1
+sqlparse==0.2.4
+urllib3==1.23
