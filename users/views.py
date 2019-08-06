@@ -3,10 +3,6 @@ from . import models, serializers
 
 
 class UserProfile(generics.RetrieveAPIView):
-    """
-        Get user profile.
-    """
-
     serializer_class = serializers.UserSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
@@ -15,10 +11,6 @@ class UserProfile(generics.RetrieveAPIView):
 
 
 class CreateUser(generics.CreateAPIView):
-    """
-        Create an user.
-    """
-
     serializer_class = serializers.UserSerializer
 
     def perform_create(self, serializer):
@@ -28,5 +20,3 @@ class CreateUser(generics.CreateAPIView):
         else:
             ip = self.request.META.get('REMOTE_ADDR')
         serializer.save(ip=ip)
-
-

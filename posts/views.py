@@ -1,14 +1,10 @@
-from rest_framework import generics, filters, exceptions, permissions as rest_permissions
+from rest_framework import generics, filters, exceptions
 from . import serializer, models, pagination, permissions
 from communities import models as community_models
 
 
-class RetrievePostList(generics.ListAPIView):
-    """
-        Retrieve a list of posts from a community.
-    """
-
-    serializer_class = serializer.RetrievePostListSerializer
+class ListCreatePostsAPIView(generics.ListCreateAPIView):
+    serializer_class = serializer.RetrieveUpdateDestroyPostSerializer
     pagination_class = pagination.PostsPagination
     filter_backends = (filters.OrderingFilter, filters.SearchFilter)
     search_fields = ('title', 'description')
@@ -19,48 +15,18 @@ class RetrievePostList(generics.ListAPIView):
             raise exceptions.NotFound()
         return models.Post.objects.filter(community=community)
 
-
-class RetrievePost(generics.RetrieveAPIView):
-    """
-        Retrieve individual posts.
-    """
-
-    serializer_class = serializer.RetrievePostSerializer
-    queryset = models.Post.objects.all()
-    permission_classes = (permissions.CanSeePost, )
-    lookup_field = 'slug'
-
-
-class UpdatePost(generics.UpdateAPIView):
-    """
-        Updates a post.
-    """
-
-    serializer_class = serializer.UpdatePostSerializer
-    queryset = models.Post.objects.filter(is_active=True)
-    permission_classes = (permissions.IsOwner, )
-    lookup_field = 'slug'
-
-
-class CreatePost(generics.CreateAPIView):
-    """
-        Creates a post.
-    """
-
-    serializer_class = serializer.CreatePostSerializer
-    permission_classes = (rest_permissions.IsAuthenticated, )
-
-    def perform_create(self, serializer):
+    def perform_create(self, serializer_local):
         community = community_models.Community.objects.get(slug=self.kwargs.get('community'))
-        serializer.save(posted_by=self.request.user, community=community)
+        serializer_local.save(posted_by=self.request.user, community=community)
 
 
-class DeletePost(generics.UpdateAPIView):
-    """
-        Deactivates a post.
-    """
-
-    serializer_class = serializer.DeletePostSerializer
-    queryset = models.Post.objects.filter(is_active=True)
+class RetrieveUpdateDestroyPostAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializer.ListCreatePostSerializer
+    queryset = models.Post.objects.all()
     permission_classes = (permissions.IsOwner, )
-    lookup_field = 'slug'
+    lookup_field = 'id'
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            self.permission_classes = (permissions.CanSeePost, )
+        return super().get_permissions()

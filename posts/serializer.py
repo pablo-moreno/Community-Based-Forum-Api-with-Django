@@ -2,29 +2,14 @@ from rest_framework import serializers
 from . import models
 
 
-class RetrievePostListSerializer(serializers.ModelSerializer):
-    """
-        Serializer for post list.
-    """
-
-    title = serializers.SerializerMethodField()
-    post_link = serializers.HyperlinkedIdentityField(view_name='retrieve-post', lookup_field='slug')
-
-    def get_title(self, object):
-        return object.title if object.is_active else "deleted"
-
-    class Meta:
-        model = models.Post
-        fields = ('title', 'votes', 'posted_by', 'comments_count', 'post_link')
-
-
-class RetrievePostSerializer(serializers.ModelSerializer):
+class RetrieveUpdateDestroyPostSerializer(serializers.ModelSerializer):
     """
         Serializer for individual post.
     """
     description = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    is_active = serializers.BooleanField(write_only=True)
 
     def get_description(self, object):
         return object.description if object.is_active else "deleted"
@@ -37,34 +22,17 @@ class RetrievePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Post
-        fields = ('title', 'description', 'votes', 'locked', 'posted_by', 'url', 'comments_count')
+        fields = ('title', 'description', 'votes', 'locked', 'posted_by', 'url', 'comments_count', 'is_active')
 
 
-class UpdatePostSerializer(serializers.ModelSerializer):
-    """
-        Serializer for updating a post.
-    """
-
-    class Meta:
-        model = models.Post
-        fields = ('title', 'description', 'votes', 'locked', 'url')
-
-
-class CreatePostSerializer(serializers.ModelSerializer):
+class ListCreatePostSerializer(serializers.ModelSerializer):
     """
         Serializer for creating a post.
     """
 
-    class Meta:
-        model = models.Post
-        fields = ('title', 'description', 'url')
-
-
-class DeletePostSerializer(serializers.ModelSerializer):
-    """
-        Serializer for post deactivation.
-    """
+    post_link = serializers.HyperlinkedIdentityField(view_name='retrieve-post', lookup_field='slug', read_only=True)
 
     class Meta:
         model = models.Post
-        fields = ('is_active', )
+        fields = ('title', 'description', 'url', 'post_link', 'comments_count', 'posted_by', 'votes')
+

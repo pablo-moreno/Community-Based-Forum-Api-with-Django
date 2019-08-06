@@ -1,4 +1,7 @@
 # Community Based Forum Api with Django and DRF
+
+NOTE: Use this at your own risk, I've made this only as a demo.
+
 A community based backend api similar to Reddit built on DRF and DJANGO. It has comments, posts, communities and users.
 
 ## Users
