@@ -16,7 +16,7 @@ class ListCreateCommunity(generics.ListCreateAPIView):
         if user_type == 'moderators':
             return self.queryset.filter(moderators=self.request.user)
         else:
-            return self.queryset.filter(moderators=self.request.user)
+            return self.queryset
 
 
 class UpdateRetrieveDestroyCommunityAPIView(generics.RetrieveUpdateDestroyAPIView):
