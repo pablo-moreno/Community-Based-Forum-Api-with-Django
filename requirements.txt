@@ -4,7 +4,7 @@ cffi==1.12.3
 chardet==3.0.4
 configparser==3.5.0b2
 cryptography==2.3
-Django==2.2.10
+Django==2.2.13
 django-debug-toolbar==1.11
 django-environ==0.4.5
 django-rest-framework-proxy==1.6.0
